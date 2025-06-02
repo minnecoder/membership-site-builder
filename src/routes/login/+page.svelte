@@ -29,6 +29,7 @@
 		<div class="form-group">
 			<label for="tenant">Select Tenant</label>
 			<select id="tenant" bind:value={tenantId} required>
+				<option value="" disabled>Select a tenant</option>
 				{#each tenants as tenant}
 					<option value={tenant.id}>{tenant.name}</option>
 				{/each}
@@ -59,6 +60,9 @@
 
 		<button type="submit" disabled={!tenantId || !username || !password}> Log In </button>
 	</form>
+	<p class="login-link">
+		Don't have an account? <a href="/register">Register</a>
+	</p>
 </div>
 
 <style>
@@ -115,5 +119,9 @@
 		color: red;
 		margin-bottom: 1rem;
 		text-align: center;
+	}
+	.login-link {
+		text-align: center;
+		margin-top: 1rem;
 	}
 </style>
