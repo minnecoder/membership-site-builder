@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import { eq, and, or } from 'drizzle-orm';
 import { sha256 } from '@oslojs/crypto/sha2';
 import { encodeBase64url, encodeHexLowerCase } from '@oslojs/encoding';
 import { db } from '$lib/server/db';
@@ -31,11 +31,11 @@ export async function validateSessionToken(token: string) {
 	const [result] = await db
 		.select({
 			// Adjust user table here to tweak returned data
-			user: { id: table.user.id, username: table.user.username },
+			user: { id: table.users.id, username: table.users.username },
 			session: table.session
 		})
 		.from(table.session)
-		.innerJoin(table.user, eq(table.session.userId, table.user.id))
+		.innerJoin(table.users, eq(table.session.userId, table.users.id))
 		.where(eq(table.session.id, sessionId));
 
 	if (!result) {
@@ -78,4 +78,69 @@ export function deleteSessionTokenCookie(event: RequestEvent) {
 	event.cookies.delete(sessionCookieName, {
 		path: '/'
 	});
+}
+
+// TODO: Figure out what tenants schema should look like
+import { tenants } from '$lib/server/db/schema';
+
+export async function checkTenantExists(tenantId: string): Promise<boolean> {
+	const result = await db.select().from(tenants).where(eq(tenants.id, tenantId)).limit(1);
+	return result.length > 0;
+}
+
+import { users } from '$lib/server/db/schema';
+
+export async function checkUserExists(
+  tenantId: string,
+  username: string,
+  email: string
+): Promise<boolean> {
+  const result = await db
+    .select()
+    .from(users)
+	.where(
+	  and(
+		eq(users.tenantId, tenantId),
+		or(eq(users.username, username), eq(users.email, email))
+	  )
+	)
+    .limit(1);
+
+  return result.length > 0;
+}
+
+interface CreateUserInput {
+  tenantId: string;
+  username: string;
+  email: string;
+  password: string; // already hashed
+}
+
+export async function createUser(input: CreateUserInput) {
+  const [user] = await db
+	.insert(users)
+	.values({
+	  id: crypto.randomUUID(),
+	  tenantId: input.tenantId,
+	  username: input.username,
+	  email: input.email,
+	  password: input.password
+	})
+	.returning();
+
+  return user;
+}
+
+export async function hashPassword(password: string): Promise<string> {
+	const encoder = new TextEncoder();
+	const hashBuffer = await crypto.subtle.digest('SHA-256', encoder.encode(password));
+	return encodeHexLowerCase(new Uint8Array(hashBuffer));
+}
+
+export async function verifyPassword(
+	hashedPassword: string,
+	password: string
+): Promise<boolean> {
+	const hash = await hashPassword(password);
+	return hashedPassword === hash;
 }
