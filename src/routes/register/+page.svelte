@@ -1,13 +1,10 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 
-	 export let data; // This contains the data returned from your +page.server.ts load function
-console.log('Register page data:', data);
-    const tenants = data.tenants;
+	 
 
 	// TODO: Have access to register page only accessible from invitation??
 
-	let tenantId = '';
 	let username = '';
 	let email = '';
 	let password = '';
@@ -23,16 +20,6 @@ console.log('Register page data:', data);
 
 	<form method="POST" use:enhance>
 		<!-- TODO: Add error message responses from server -->
-
-		<div class="form-group">
-			<label for="tenant">Select Tenant</label>
-			<select id="tenant" bind:value={tenantId} required>
-				<option value="" disabled>Select a tenant</option>
-				{#each tenants as tenant}
-					<option value={tenant.id}>{tenant.name}</option>
-				{/each}
-			</select>
-		</div>
 
 		<div class="form-group">
 			<label for="username">Username</label>
@@ -74,7 +61,7 @@ console.log('Register page data:', data);
 
 		<button
 			type="submit"
-			disabled={!tenantId || !username || !email || !password || !confirmPassword}
+			disabled={!username || !email || !password || !confirmPassword}
 		>
 			Register
 		</button>
@@ -108,15 +95,6 @@ console.log('Register page data:', data);
 		display: block;
 		margin-bottom: 0.5rem;
 		font-weight: bold;
-	}
-
-	select,
-	input {
-		width: 100%;
-		padding: 0.5rem;
-		border: 1px solid #ccc;
-		border-radius: 4px;
-		font-size: 1rem;
 	}
 
 	button {
