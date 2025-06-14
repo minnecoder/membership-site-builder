@@ -12,10 +12,17 @@
 	function nextStep() {
 		step += 1;
 	}
+
 	function previousStep() {
 		if (step > 1) {
 			step -= 1;
 		}
+	}
+
+	function getStepClass(n: number) {
+		if (step > n) return 'completed';
+		if (step === n) return 'active';
+		return 'upcoming';
 	}
 
 	// Form Data
@@ -37,52 +44,48 @@
 		<div class="toc">
 			<div class="toc-item">
 				<div class="toc-left">
-					<p class="numberCircle">1</p>
-
+					<p class="numberCircle {getStepClass(1)}">1</p>
 				</div>
 				<div class="toc-right">
 					<p class="step">Welcome</p>
 					<p class="summary">Welcome to "name of website"</p>
-
-
 				</div>
 			</div>
 			<div class="toc-item">
 				<div class="toc-left">
-					<p class="numberCircle">2</p>
-
+					<p class="numberCircle {getStepClass(2)}">2</p>
 				</div>
-			<div class="toc-right">
-				<p class="step">Create User</p>
-				<p class="summary">Create user that is the owner of the "tenant"</p>
-				</div>	
+				<div class="toc-right">
+					<p class="step">Create User</p>
+					<p class="summary">Create user that is the owner of the "tenant"</p>
+				</div>
 			</div>
 			<div class="toc-item">
 				<div class="toc-left">
-				<p class="numberCircle">3</p>
+					<p class="numberCircle {getStepClass(3)}">3</p>
 				</div>
-			<div class="toc-right">
-				<p class="step">Create "Tenant"</p>
-				<p class="summary">Create the "tenant"</p>
-				</div>	
+				<div class="toc-right">
+					<p class="step">Create "Tenant"</p>
+					<p class="summary">Create the "tenant"</p>
+				</div>
 			</div>
 			<div class="toc-item">
 				<div class="toc-left">
-				<p class="numberCircle">4</p>
+					<p class="numberCircle {getStepClass(4)}">4</p>
 				</div>
-			<div class="toc-right">
-				<p class="step">Something</p>
-				<p class="summary">Possibly another step</p>
-			</div>
+				<div class="toc-right">
+					<p class="step">Something</p>
+					<p class="summary">Possibly another step</p>
+				</div>
 			</div>
 			<div class="toc-item">
-			<div class="toc-left">
-				<p class="numberCircle">5</p>
-			</div>
-			<div class="toc-right">
-				<p class="step">Something Else</p>
-				<p class="summary">Possibly another step again</p>
-			</div>
+				<div class="toc-left">
+					<p class="numberCircle {getStepClass(5)}">5</p>
+				</div>
+				<div class="toc-right">
+					<p class="step">Something Else</p>
+					<p class="summary">Possibly another step again</p>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -105,7 +108,7 @@
 			<div class="form-step">
 				<p>Step {step} / ?</p>
 				<p class="title">Welcome to user creation</p>
-				<p class="summary">This will be the user that will be the owner of the "tenant"</p>
+				<p class="step-summary">This will be the user that will be the owner of the "tenant"</p>
 				<form method="POST" use:enhance>
 					<!-- TODO: Add error message responses from server -->
 
@@ -164,64 +167,64 @@
 				</form>
 			</div>
 		{:else if step === 3}
-		<div class="form-step">
+			<div class="form-step">
 				<p>Step {step} / ?</p>
-			<p class="title">Create New "Tenant"</p>
-			<p class="summary">Now let's create the "tenant". Please fill out all of the information below</p>
+				<p class="title">Create New "Tenant"</p>
+				<p class="step-summary">Please fill out all of the information below</p>
 
-			<form method="POST" use:enhance>
-				<!-- {#if form?.error}
+				<form method="POST" use:enhance>
+					<!-- {#if form?.error}
         <div class="error">{form.error}</div>
       {/if} -->
 
-				<div class="form-group">
-					<label for="tenantName">Tenant Name</label>
-					<input
-						type="text"
-						id="name"
-						bind:value={name}
-						required
-						placeholder="Enter tenant name (e.g., Acme Corp)"
-					/>
-				</div>
+					<div class="form-group">
+						<label for="tenantName">Tenant Name</label>
+						<input
+							type="text"
+							id="name"
+							bind:value={name}
+							required
+							placeholder="Enter tenant name (e.g., Acme Corp)"
+						/>
+					</div>
 
-				<div class="form-group">
-					<label for="tenantSubdomain">Subdomain</label>
-					<input
-						type="text"
-						id="tenantSubdomain"
-						bind:value={subdomain}
-						required
-						pattern="/^[a-z0-9-]+$/"
-						title="Subdomain can only contain lowercase letters, numbers, and hyphens."
-						placeholder="Enter subdomain (e.g., acme)"
-					/>
-				</div>
+					<div class="form-group">
+						<label for="tenantSubdomain">Subdomain</label>
+						<input
+							type="text"
+							id="tenantSubdomain"
+							bind:value={subdomain}
+							required
+							pattern="/^[a-z0-9-]+$/"
+							title="Subdomain can only contain lowercase letters, numbers, and hyphens."
+							placeholder="Enter subdomain (e.g., acme)"
+						/>
+					</div>
 
-				<div class="form-group">
-					<label for="tenantDescription">Description</label>
-					<textarea
-						id="description"
-						bind:value={description}
-						required
-						placeholder="Enter a brief description"
-						rows="4"
-						cols="50"
-						title="Description should be a brief overview of the tenant's purpose."
-					>
-					</textarea>
-				</div>
+					<div class="form-group">
+						<label for="tenantDescription">Description</label>
+						<textarea
+							id="description"
+							bind:value={description}
+							required
+							placeholder="Enter a brief description"
+							rows="10"
+							cols="100"
+							title="Description should be a brief overview of the tenant's purpose."
+						>
+						</textarea>
+					</div>
 
-				<div class="btn-row">
-					<button type="button" onclick={previousStep}> Previous </button>
+					<div class="btn-row">
+						<button type="button" onclick={previousStep}> Previous </button>
 
-					<button type="submit">Create Tenant</button>
+						<button type="submit">Create Tenant</button>
 
-					<button type="button" onclick={nextStep} disabled={!name || !subdomain || !description}>
-						Next
-					</button>
-				</div>
-			</form>
+						<button type="button" onclick={nextStep} disabled={!name || !subdomain || !description}>
+							Next
+						</button>
+					</div>
+				</form>
 			</div>
 		{:else if step === 4}
 			<!-- Add content for step 3 here if needed -->
@@ -239,6 +242,7 @@
 		width: 30%;
 		background-color: #e7f1fc;
 		margin: 1rem;
+		padding: 1.5rem;
 		border-radius: 10px;
 	}
 	.right {
@@ -251,30 +255,73 @@
 	.title {
 		font-size: 1.5rem;
 		font-weight: bold;
-		margin-bottom: 1rem;
+		margin: 0;
+	}
+
+	.step-summary {
+		margin: 0 0 1rem 0;
 	}
 
 	.numberCircle {
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-		
+		border-radius: 50%;
+		width: 24px;
+		height: 24px;
+		background: none;
+		border: 1px solid #000;
+		color: #000;
+		text-align: center;
+		line-height: 24px;
+		position: relative; /* needed for ::after positioning */
+	}
 
+	.numberCircle::after {
+		content: '';
+		position: absolute;
+		top: 130%; /* start just below the circle */
+		left: 50%; /* center horizontally */
+		transform: translateX(-50%); /* truly center it */
+		width: 1px; /* thickness of the line */
+		height: 50px; /* length of the vertical line — adjust as needed */
+		background-color: #acacac; /* color of the line */
+	}
 
-    background: none;
-    border: 1px solid #000;
-    color: #000;
-    text-align: center;
+	.numberCircle.completed {
+		background-color: rgb(138, 139, 138);
+		color: white;
+		border-color: rgb(138, 139, 138);
+	}
 
-    /* font: 32px Arial, sans-serif; */
-}
-.toc-item {
+	.numberCircle.active {
+		background-color: #000; /* blue (your primary color) */
+		color: white;
+		border-color: #000;
+	}
+
+	.numberCircle.upcoming {
+		background-color: none;
+		color: black;
+		border-color: black;
+	}
+
+	.toc-item {
 		display: flex;
-		/* align-items: center; */
+		margin-left: 1rem;
 		margin-bottom: 1rem;
 	}
-.toc-left {
-		flex: 0 0 auto;
+
+	.summary {
+		margin: 0;
+	}
+
+	.step {
+		font-weight: bold;
+		font-size: 1.2rem;
+		margin: 0;
+	}
+	.toc-right {
+		margin: 1rem 0 3rem 0;
+	}
+	.toc-left {
 		margin-right: 1rem;
 	}
 	.form-group {
@@ -284,7 +331,6 @@
 	label {
 		display: block;
 		margin-bottom: 0.5rem;
-		/* font-weight: bold; */
 	}
 
 	input {
@@ -298,7 +344,6 @@
 	.btn-row {
 		display: flex;
 		justify-content: space-between;
-
 		margin-top: 1rem;
 	}
 	.steponebtn {
