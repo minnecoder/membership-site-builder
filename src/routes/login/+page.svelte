@@ -12,69 +12,95 @@
 </svelte:head>
 
 <div class="container">
-	<h1>Login</h1>
+	<div class="left">
+		<h1 class="logo">Company Logo</h1>
+	</div>
+	<div class="right">
+		<h1>Welcome Back</h1>
+		<p class="small">Please login to your account</p>
 
-	<form method="POST" use:enhance>
-		<!-- Form errors will go here -->
+		<form method="POST" use:enhance>
+			<!-- Form errors will go here -->
 
-		
+			<div class="form-group">
+				<input type="text" id="username" bind:value={username} required placeholder="Username" />
+			</div>
 
-		<div class="form-group">
-			<label for="username">Username</label>
-			<input
-				type="text"
-				id="username"
-				bind:value={username}
-				required
-				placeholder="Enter your username"
-			/>
-		</div>
+			<div class="form-group">
+				<input
+					type="password"
+					id="password"
+					bind:value={password}
+					required
+					placeholder="Password"
+				/>
+			</div>
 
-		<div class="form-group">
-			<label for="password">Password</label>
-			<input
-				type="password"
-				id="password"
-				bind:value={password}
-				required
-				placeholder="Enter your password"
-			/>
-		</div>
-
-		<button type="submit" disabled={ !username || !password}> Log In </button>
-	</form>
-	<p class="login-link">
-		Don't have an account? <a href="/register">Register</a>
-	</p>
+			<button type="submit"> Log In </button>
+		</form>
+		<p class="login-link">
+			Don't have an account? <a href="/register">Register</a>
+		</p>
+	</div>
 </div>
 
 <style>
 	.container {
-		max-width: 400px;
-		margin: 2rem auto;
+		display: flex;
+		flex-direction: row;
+		height: 100vh;
+	}
+	.left {
+		width: 30%;
+		background-color: #007bff;
+		margin: 1rem;
+		padding: 1.5rem;
+		border-radius: 10px;
+	}
+	.right {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
 		padding: 2rem;
-		border: 1px solid #ccc;
-		border-radius: 8px;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		background-color: #ffffff;
 	}
 
-	h1 {
+	.logo {
+		font-size: 2rem;
+		font-weight: bold;
 		text-align: center;
-		margin-bottom: 1.5rem;
+		margin-bottom: 2rem;
+	}
+	.right h1 {
+		text-align: center;
+		margin: 1rem 0 0 0;
+	}
+
+	.small {
+		text-align: center;
+		margin-bottom: 3rem;
+		font-size: 0.9rem;
+		color: #666;
 	}
 
 	.form-group {
 		margin-bottom: 1rem;
 	}
 
-	label {
-		display: block;
-		margin-bottom: 0.5rem;
-		font-weight: bold;
+	input {
+		width: 400px;
+		padding: 1rem;
+		background: #e9e9e9;
+		border: none;
+		border-radius: 5px;
+		font-size: 1rem;
+		margin-bottom: 1rem;
+		font: inherit;
 	}
 
 	button {
-		width: 100%;
+		width: 25%;
 		padding: 0.75rem;
 		background-color: #007bff;
 		color: white;
@@ -82,11 +108,8 @@
 		border-radius: 4px;
 		font-size: 1rem;
 		cursor: pointer;
-	}
-
-	button:disabled {
-		background-color: #6c757d;
-		cursor: not-allowed;
+		margin-bottom: 2rem;
+		font: inherit;
 	}
 
 	/* .error {
@@ -94,7 +117,7 @@
 		margin-bottom: 1rem;
 		text-align: center;
 	} */
-	 
+
 	.login-link {
 		text-align: center;
 		margin-top: 1rem;

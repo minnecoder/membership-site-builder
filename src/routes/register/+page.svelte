@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 
-	 
-
 	// TODO: Have access to register page only accessible from invitation??
 
 	let username = '';
@@ -16,70 +14,74 @@
 </svelte:head>
 
 <div class="container">
-	<h1>Register</h1>
+	<div class="left">
+		<h1 class="logo">Company Logo</h1>
+	</div>
+	<div class="right">
+		<h1>Register</h1>
 
-	<form method="POST" use:enhance>
-		<!-- TODO: Add error message responses from server -->
+		<form method="POST" use:enhance>
+			<!-- TODO: Add error message responses from server -->
 
-		<div class="form-group">
-			<label for="username">Username</label>
-			<input
-				type="text"
-				id="username"
-				bind:value={username}
-				required
-				placeholder="Enter your username"
-			/>
-		</div>
+			<div class="form-group">
+				<input type="text" id="username" bind:value={username} required placeholder="Username" />
+			</div>
 
-		<div class="form-group">
-			<label for="email">Email</label>
-			<input type="email" id="email" bind:value={email} required placeholder="Enter your email" />
-		</div>
+			<div class="form-group">
+				<input type="email" id="email" bind:value={email} required placeholder="Email" />
+			</div>
 
-		<div class="form-group">
-			<label for="password">Password</label>
-			<input
-				type="password"
-				id="password"
-				bind:value={password}
-				required
-				placeholder="Enter your password"
-			/>
-		</div>
+			<div class="form-group">
+				<input
+					type="password"
+					id="password"
+					bind:value={password}
+					required
+					placeholder="Password"
+				/>
+			</div>
 
-		<div class="form-group">
-			<label for="confirm-password">Confirm Password</label>
-			<input
-				type="password"
-				id="confirm-password"
-				bind:value={confirmPassword}
-				required
-				placeholder="Confirm your password"
-			/>
-		</div>
+			<div class="form-group">
+				<input
+					type="password"
+					id="confirm-password"
+					bind:value={confirmPassword}
+					required
+					placeholder="Confirm Password"
+				/>
+			</div>
 
-		<button
-			type="submit"
-			disabled={!username || !email || !password || !confirmPassword}
-		>
-			Register
-		</button>
-	</form>
+			<button type="submit" disabled={!username || !email || !password || !confirmPassword}>
+				Register
+			</button>
+		</form>
 
-	<p class="login-link">
-		Already have an account? <a href="/login">Log in</a>
-	</p>
+		<p class="login-link">
+			Already have an account? <a href="/login">Log in</a>
+		</p>
+	</div>
 </div>
 
 <style>
 	.container {
-		max-width: 400px;
-		margin: 2rem auto;
+		display: flex;
+		flex-direction: row;
+		height: 100vh;
+	}
+	.left {
+		width: 30%;
+		background-color: #007bff;
+		margin: 1rem;
+		padding: 1.5rem;
+		border-radius: 10px;
+	}
+	.right {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
 		padding: 2rem;
-		border: 1px solid #ccc;
-		border-radius: 8px;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		background-color: #ffffff;
 	}
 
 	h1 {
@@ -91,26 +93,27 @@
 		margin-bottom: 1rem;
 	}
 
-	label {
-		display: block;
-		margin-bottom: 0.5rem;
-		font-weight: bold;
+	input {
+		width: 400px;
+		padding: 1rem;
+		background: #e9e9e9;
+		border: none;
+		border-radius: 5px;
+		font-size: 1rem;
+		margin-bottom: 1rem;
+		font: inherit;
 	}
 
 	button {
-		width: 100%;
+		width: 25%;
 		padding: 0.75rem;
-		background-color: #28a745;
+		background-color: #007bff;
 		color: white;
 		border: none;
 		border-radius: 4px;
 		font-size: 1rem;
 		cursor: pointer;
-	}
-
-	button:disabled {
-		background-color: #6c757d;
-		cursor: not-allowed;
+		margin-bottom: 2rem;
 	}
 
 	/* .error {

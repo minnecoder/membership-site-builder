@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { Icon } from 'svelte-icons-pack';
+	import { FaSolidChevronLeft } from 'svelte-icons-pack/fa';
 
 	type Theme = {
 		dark: boolean;
@@ -32,7 +34,7 @@
 	let confirmPassword: string = '';
 	let name: string = '';
 	let description: string = '';
-	let ownerUserId: string = ''; // Assuming you will set this from the session or context
+	let ownerUserId: string = '';
 	let subdomain: string = '';
 	let logourl: string = '';
 	let theme: Theme = { dark: false, primaryColor: '#17a2b8', secondaryColor: '#6c757d' };
@@ -41,6 +43,7 @@
 <div class="container">
 	<!-- TODO: Need to make the "welcome message better" -->
 	<div class="left">
+		<h1 class="logo">Company Logo</h1>
 		<div class="toc">
 			<div class="toc-item">
 				<div class="toc-left">
@@ -106,6 +109,9 @@
 			</div>
 		{:else if step === 2}
 			<div class="form-step">
+				<button type="button" class="prev-btn" onclick={previousStep}
+					><Icon src={FaSolidChevronLeft} /> Back
+				</button>
 				<p>Step {step} / ?</p>
 				<p class="title">Welcome to user creation</p>
 				<p class="step-summary">This will be the user that will be the owner of the "tenant"</p>
@@ -113,54 +119,41 @@
 					<!-- TODO: Add error message responses from server -->
 
 					<div class="form-group">
-						<label for="username">Username</label>
 						<input
 							type="text"
 							id="username"
 							bind:value={username}
 							required
-							placeholder="Enter your username"
+							placeholder="Username"
 						/>
 					</div>
 
 					<div class="form-group">
-						<label for="email">Email</label>
-						<input
-							type="email"
-							id="email"
-							bind:value={email}
-							required
-							placeholder="Enter your email"
-						/>
+						<input type="email" id="email" bind:value={email} required placeholder="Email" />
 					</div>
 
 					<div class="form-group">
-						<label for="password">Password</label>
 						<input
 							type="password"
 							id="password"
 							bind:value={password}
 							required
-							placeholder="Enter your password"
+							placeholder="Password"
 						/>
 					</div>
 
 					<div class="form-group">
-						<label for="confirm-password">Confirm Password</label>
 						<input
 							type="password"
 							id="confirm-password"
 							bind:value={confirmPassword}
 							required
-							placeholder="Confirm your password"
+							placeholder="Confirm password"
 						/>
 					</div>
 
 					<div class="btn-row">
-						<button type="button" onclick={previousStep}> Previous </button>
-						<button type="submit" disabled={!username || !email || !password || !confirmPassword}>
-							Register
-						</button>
+						<button type="submit"> Register </button>
 
 						<button onclick={nextStep}>Next</button>
 					</div>
@@ -168,6 +161,9 @@
 			</div>
 		{:else if step === 3}
 			<div class="form-step">
+				<button type="button" class="prev-btn" onclick={previousStep}
+					><Icon src={FaSolidChevronLeft} /> Back
+				</button>
 				<p>Step {step} / ?</p>
 				<p class="title">Create New "Tenant"</p>
 				<p class="step-summary">Please fill out all of the information below</p>
@@ -178,46 +174,36 @@
       {/if} -->
 
 					<div class="form-group">
-						<label for="tenantName">Tenant Name</label>
-						<input
-							type="text"
-							id="name"
-							bind:value={name}
-							required
-							placeholder="Enter tenant name (e.g., Acme Corp)"
-						/>
+						<input type="text" id="name" bind:value={name} required placeholder="Tenant Name" />
 					</div>
 
 					<div class="form-group">
-						<label for="tenantSubdomain">Subdomain</label>
 						<input
 							type="text"
 							id="tenantSubdomain"
 							bind:value={subdomain}
 							required
 							pattern="/^[a-z0-9-]+$/"
-							title="Subdomain can only contain lowercase letters, numbers, and hyphens."
-							placeholder="Enter subdomain (e.g., acme)"
+							title="Subdomain Name (can only contain lowercase letters, numbers, and hyphens.)"
+							placeholder="Subdomain Name"
 						/>
 					</div>
 
 					<div class="form-group">
-						<label for="tenantDescription">Description</label>
 						<textarea
+							class="description"
 							id="description"
 							bind:value={description}
 							required
-							placeholder="Enter a brief description"
+							placeholder="Tenant Description"
 							rows="10"
-							cols="100"
+							cols="50"
 							title="Description should be a brief overview of the tenant's purpose."
 						>
 						</textarea>
 					</div>
 
 					<div class="btn-row">
-						<button type="button" onclick={previousStep}> Previous </button>
-
 						<button type="submit">Create Tenant</button>
 
 						<button type="button" onclick={nextStep} disabled={!name || !subdomain || !description}>
@@ -240,16 +226,23 @@
 	}
 	.left {
 		width: 30%;
-		background-color: #e7f1fc;
+		background-color: #007bff;
 		margin: 1rem;
 		padding: 1.5rem;
 		border-radius: 10px;
 	}
 	.right {
-		width: 50%;
+		width: 70%;
 		float: right;
 		padding: 2rem;
 		background-color: #ffffff;
+	}
+
+	.logo {
+		font-size: 2rem;
+		font-weight: bold;
+		text-align: center;
+		margin-bottom: 2rem;
 	}
 
 	.title {
@@ -259,7 +252,9 @@
 	}
 
 	.step-summary {
-		margin: 0 0 1rem 0;
+		margin: 0 0 2rem 0;
+		padding-bottom: 1.5rem;
+		border-bottom: 1px solid #dddddd;
 	}
 
 	.numberCircle {
@@ -271,42 +266,54 @@
 		color: #000;
 		text-align: center;
 		line-height: 24px;
-		position: relative; /* needed for ::after positioning */
+		position: relative;
 	}
 
 	.numberCircle::after {
 		content: '';
 		position: absolute;
-		top: 130%; /* start just below the circle */
-		left: 50%; /* center horizontally */
-		transform: translateX(-50%); /* truly center it */
-		width: 1px; /* thickness of the line */
-		height: 50px; /* length of the vertical line — adjust as needed */
-		background-color: #acacac; /* color of the line */
+		top: 130%;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 1px;
+		height: 50px;
+		background-color: #fff;
 	}
 
 	.numberCircle.completed {
-		background-color: rgb(138, 139, 138);
+		background-color: green;
+		color: transparent;
+		border-color: green;
+		position: relative;
+	}
+
+	.numberCircle.completed::before {
+		content: '✓';
 		color: white;
-		border-color: rgb(138, 139, 138);
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		font-size: 16px;
 	}
 
 	.numberCircle.active {
-		background-color: #000; /* blue (your primary color) */
-		color: white;
-		border-color: #000;
+		background-color: #7996ff;
+		color: #fff;
+		border-color: #7996ff;
 	}
 
 	.numberCircle.upcoming {
 		background-color: none;
-		color: black;
-		border-color: black;
+		color: #fff;
+		border-color: #fff;
 	}
 
 	.toc-item {
 		display: flex;
 		margin-left: 1rem;
 		margin-bottom: 1rem;
+		color: #fff;
 	}
 
 	.summary {
@@ -328,17 +335,26 @@
 		margin-bottom: 1rem;
 	}
 
-	label {
-		display: block;
-		margin-bottom: 0.5rem;
+	input {
+		width: 70%;
+		padding: 1rem;
+		background: #e9e9e9;
+		border: none;
+		border-radius: 5px;
+		font-size: 1rem;
+		margin-bottom: 1rem;
+		font: inherit;
 	}
 
-	input {
-		width: 100%;
+	.description {
+		width: 71%;
 		padding: 0.5rem;
-		border: 1px solid #ccc;
+		border: none;
+		background: #e9e9e9;
 		border-radius: 4px;
 		font-size: 1rem;
+		resize: none;
+		font: inherit;
 	}
 
 	.btn-row {
@@ -352,7 +368,7 @@
 		width: 20%;
 		padding: 0.75rem;
 		text-align: center;
-		background-color: #17a2b8;
+		background-color: #007bff;
 		color: white;
 		border: none;
 		border-radius: 4px;
@@ -363,7 +379,7 @@
 	button {
 		width: 20%;
 		padding: 0.75rem;
-		background-color: #17a2b8;
+		background-color: #007bff;
 		color: white;
 		border: none;
 		border-radius: 4px;
@@ -371,9 +387,16 @@
 		cursor: pointer;
 	}
 
-	button:disabled {
-		background-color: #6c757d;
-		cursor: not-allowed;
+	.prev-btn {
+		width: 10%;
+		padding: 0.75rem;
+		background-color: #fff;
+		color: #000;
+		border: solid 1px #000;
+		border-radius: 4px;
+		font-size: 1rem;
+		cursor: pointer;
+		margin-bottom: 1rem;
 	}
 
 	/* .error {
